@@ -11,10 +11,11 @@
 from datetime import date
 from app.bookings.model import Bookings
 from app.dao.base import BaseDAO
-from sqlalchemy import and_, insert, or_, select, func
+from sqlalchemy import and_, delete, insert, or_, select, func
+from sqlalchemy.orm import aliased
 
 from app.database import async_session_maker, engine
-from app.hotels.model import Rooms
+from app.hotels.rooms.model import Rooms
 
 class BookingDAO(BaseDAO):
     model = Bookings
@@ -94,3 +95,44 @@ class BookingDAO(BaseDAO):
                     
             else:
                 return None
+            
+    @classmethod # УДАЛЕНИЕ
+    async def delete(cls, booking_id: int, user_id: int):
+        async with async_session_maker() as session:
+            delete_booking = (
+                delete(Bookings)
+                .where(Bookings.id == booking_id)
+                .where(Bookings.user_id == user_id)
+            )
+
+            result = await session.execute(delete_booking)
+            await session.commit()
+            return result.rowcount > 0
+
+    @classmethod #3) Получение списка бронирований 
+    async def find_by_user(cls, user_id):
+        async with async_session_maker() as session:
+            r = aliased(Rooms)
+            b = aliased(Bookings)
+            
+            querry = (select(
+                b.id,
+                b.room_id,
+                b.user_id,
+                b.date_from,
+                b.date_to,
+                b.price,
+                b.total_cost,
+                b.total_days,
+                r.image_id,
+                r.name,
+                r.description,
+                r.services
+            )
+                      .filter(b.user_id == user_id)
+                      .select_from(b)
+                      .join(r, b.user_id ==r.id, isouter=True)
+                      )
+            result = await session.execute(querry)
+            return result.mappings.all()
+            

@@ -5,8 +5,9 @@ from sqlalchemy import select
 from app.bookings.dao import BookingDAO
 from app.database import async_session_maker
 from app.bookings.model import Bookings
-from app.bookings.schemas import SBooking
-from app.exceptions import RoomCannotBeBooked
+from app.bookings.schemas import SBooking, SBookingWithRoomInfo
+from app.exceptions import BookingNotExist, RoomCannotBeBooked
+from app.hotels.dao import HotelDAO
 from app.users.dependencies import get_current_user
 from app.users.model import Users
 
@@ -30,11 +31,23 @@ async def add_bookings(
     if not booking:
         raise RoomCannotBeBooked
     
+@router.delete("/{booking_id}") # Удаление
+async def cancel_booking(
+    booking_id: int,
+    user: Users = Depends(get_current_user),  
+) -> dict[str, str]:
+    success = await BookingDAO.delete(booking_id, user.id)
+
+    if not success:
+        raise BookingNotExist
+
+    return {"message": "Бронь отменена"}
 
 
-
-
-    
+@router.get("")
+async def get_by_user_id(user_id: int)-> list[SBookingWithRoomInfo]:
+    return await BookingDAO.find_by_user
+   
 # @router.get("")
 # async def get_bookings(request: Request):
 #     return await BookingDAO.find_all()

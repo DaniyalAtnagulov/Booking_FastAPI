@@ -12,7 +12,8 @@ sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))    # то, чт
 
 from app.database import Base              # то, что изменил(добавил) в изначальном файл Абсолютный импорт
 from app.config import settings          # то, что изменил(добавил) в изначальном файл Абсолютный импорт
-from app.hotels.model import Hotels,Rooms             # то, что изменил(добавил) в изначальном файл Абсолютный импорт модели
+from app.hotels.model import Hotels             # то, что изменил(добавил) в изначальном файл Абсолютный импорт модели
+from app.hotels.rooms.model import Rooms # то, что изменил(добавил) в изначальном файл Абсолютный импорт
 from app.bookings.model import Bookings   # то, что изменил(добавил) в изначальном файл Абсолютный импорт
 from app.users.model import Users # то, что изменил(добавил) в изначальном файл Абсолютный импорт
 
