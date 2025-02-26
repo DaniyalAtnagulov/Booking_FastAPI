@@ -2,8 +2,7 @@ from fastapi import FastAPI, Query
 from fastapi.staticfiles import StaticFiles
 from typing import Annotated, Optional
 from datetime import date
-
-
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from app.bookings.router import router as router_bookings
@@ -25,6 +24,26 @@ app.include_router(router_bookings)
 app.include_router(router_pages)
 
 app.include_router(router_images)
+
+
+origins = [
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "OPTIONS", "DELETE", "PATCH", "PUT"],
+    allow_headers=[
+        "Content-Type", 
+        "Set-Cookie", 
+        "Access-Control-Allow-Headers", 
+        "Access-Control-Allow-Origin", 
+        "Authorization"
+    ],
+)
+
 
 
 # class SHotel(BaseModel):
