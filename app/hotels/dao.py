@@ -1,12 +1,12 @@
     
 from datetime import date
 
-from sqlalchemy import func, select, and_, aliased
+from sqlalchemy import func, select, and_
 from sqlalchemy.orm import aliased
 
-from app.bookings.model import Bookings, Bookingss
+from app.bookings.model import Bookings, Bookings
    
-from database import async_session_maker  
+from app.database import async_session_maker  
 from app.hotels.model import Hotels
 from app.hotels.rooms.model import Rooms
 
@@ -14,7 +14,7 @@ from app.hotels.rooms.model import Rooms
 class HotelDAO():  # может отличатся от видео 
     @classmethod    # 1) Получение списка отелей. 
     async def search_for_hotels(cls, location: str, date_from: date, date_to: date):
-        async with async_session_maker as session:
+        async with async_session_maker() as session:
             b = aliased(Bookings)
             r = aliased(Rooms)
             h = aliased(Hotels)
@@ -25,7 +25,7 @@ class HotelDAO():  # может отличатся от видео
                                      b.date_to >= date_from)
                                  )).cte("booking_for_dates")
             
-            room_bookings = (select(r.hotel_id, func.count().lable("booked_rooms"))
+            room_bookings = (select(r.hotel_id, func.count().label("booked_rooms"))
                              .select_from(r)
                              .join(booking_for_dates, r.id==booking_for_dates.c.room_id)
                              .group_by(r.hotel_id)).cte("room bookings")
@@ -45,7 +45,7 @@ class HotelDAO():  # может отличатся от видео
                     (h.rooms_quantity - func.coalesce(room_bookings.c.booked_rooms, 0)) > 0              
             ))
             res = await session.execute(querry)
-            return res.mappings.all()
+            return res.mappings().all()
         
     @classmethod #2) Получение списка комнат
     async def get_rooms_by_hotel(cls,
