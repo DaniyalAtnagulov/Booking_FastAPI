@@ -12,7 +12,43 @@ from app.pages.router import router as router_pages
 
 from app.images.router import router as router_images
 
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
+
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.redis import RedisBackend
+from fastapi_cache.decorator import cache
+
+from redis import asyncio as aioredis
+
 app = FastAPI()
+
+# import logging       
+
+
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+    redis = aioredis.from_url("redis://localhost") #localhost:6379
+    FastAPICache.init(RedisBackend(redis), prefix="cache") #prefix="fastapi-cache" изначально
+    yield
+
+app = FastAPI(lifespan=lifespan)
+
+'''Ниже закомментирован более новый способ  '''
+
+# logger = logging.getLogger(__name__)
+# logging.basicConfig(level=logging.INFO)
+    
+# @asynccontextmanager
+# async def lifespan(app: FastAPI):
+#     logger.info("Service started")
+#     yield
+#     logger.info("Service exited")
+
+#app = FastAPI(lifespan=lifespan)
+
 
 app.mount("/static", StaticFiles(directory="app/static"), "static")
 

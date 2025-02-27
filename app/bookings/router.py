@@ -22,7 +22,7 @@ async def get_bookings(user:Users=Depends(get_current_user)) -> list[SBooking]:
     #print(user, type(user), user.email)
 
 
-@router.post("")
+@router.post("")             #стоит переделать, как в 2.1              
 async def add_bookings(
     room_id: int, date_from: date, date_to: date,
     user: Users=Depends(get_current_user),
