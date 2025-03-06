@@ -1,6 +1,7 @@
 from datetime import date
 from typing import Union
 from fastapi import APIRouter, Depends, Request
+from pydantic import TypeAdapter, parse_obj_as
 from sqlalchemy import select
 from app.bookings.dao import BookingDAO
 from app.database import async_session_maker
@@ -8,6 +9,7 @@ from app.bookings.model import Bookings
 from app.bookings.schemas import SBooking, SBookingWithRoomInfo
 from app.exceptions import BookingNotExist, RoomCannotBeBooked
 from app.hotels.dao import HotelDAO
+from app.tasks.tasks import send_booking_confirmation_email
 from app.users.dependencies import get_current_user
 from app.users.model import Users
 
@@ -28,8 +30,12 @@ async def add_bookings(
     user: Users=Depends(get_current_user),
 ):
     booking = await BookingDAO.add(user.id, room_id, date_from, date_to)
+
     if not booking:
         raise RoomCannotBeBooked
+    booking = TypeAdapter(SBooking).validate_python(booking).model_dump()     #Возможно стоит использовать иную схему SBooking
+    send_booking_confirmation_email.delay(booking, user.email)
+    return booking
     
 @router.delete("/{booking_id}") # Удаление
 async def cancel_booking(

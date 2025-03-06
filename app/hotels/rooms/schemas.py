@@ -1,6 +1,6 @@
 from datetime import date
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class SRoom(BaseModel):
     id: int
@@ -11,6 +11,8 @@ class SRoom(BaseModel):
     services: list[str]
     quantity: int
     image_id: int 
+    
+    model_config = ConfigDict(from_attributes=True)
     
     # class Config():
     #     orm_mode = True    старый метод  

@@ -1,7 +1,7 @@
 from datetime import date
 from typing import Optional
 #чтобы не прописывать заново атрибуты класса SBooking, беря их из Bokkings можно использовать SQLModel
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class SBooking(BaseModel):
     id: int             
@@ -13,7 +13,11 @@ class SBooking(BaseModel):
     total_cost: int
     total_days: int
     
+        # новый способ
+    model_config = ConfigDict(from_attributes=True)
     
+    
+    #старый спсособ
     # class Config():
     #     orm_mode = True 
     

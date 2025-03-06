@@ -20,3 +20,32 @@ def update_ip_user(ip):
  
 
 Если не хотите связываться с селери из-за отсутствия поддержки асинхронных функций, то можете использовать background_tasks. Там есть поддержка асинхронных функций. Разумеется, синхронные функции там тоже прекрасно работают )
+
+
+# Отдельная тема:
+если вдруг не хочется гонять почту на реальные сервера или нет интернета, можно делать так.
+
+1.  запускаем локальный мэйл сервер: python -m smtpd -c DebuggingServer -n localhost:1025
+
+2. в tasks.py вместо STMP_SSL используем STMP без аутентификации
+
+with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT) as server:
+
+server.send_message(msg_content)
+
+3. в окне, в котором запустили тестовый smtp сервер, смотрим результаты. Должно появляться тело письма, как показано на примере ниже
+
+---------- MESSAGE FOLLOWS ----------
+b'Subject: Booking confirmation'
+b'From: test@gmail.com'
+b'To: test123@gmail.com'
+b'Content-Type: text/html; charset="utf-8"'
+b'Content-Transfer-Encoding: 7bit'
+b'MIME-Version: 1.0'
+b'X-Peer: 127.0.0.1'
+b''
+b''
+b'        <h1>Please confirm booking</h1>'
+b"        You've booked hotel from 2023-07-06 till 2023-07-20"
+b'        '
+------------ END MESSAGE ------------

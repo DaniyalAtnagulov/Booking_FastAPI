@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from app.bookings.router import router as router_bookings
+from app.config import settings
 from app.users.router import router as router_users #,router_auth доработка функционала 1.8
 from app.hotels.router import router as router_hotels        
 from app.pages.router import router as router_pages
@@ -30,7 +31,7 @@ app = FastAPI()
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
-    redis = aioredis.from_url("redis://localhost") #localhost:6379
+    redis = aioredis.from_url(f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}") 
     FastAPICache.init(RedisBackend(redis), prefix="cache") #prefix="fastapi-cache" изначально
     yield
 
