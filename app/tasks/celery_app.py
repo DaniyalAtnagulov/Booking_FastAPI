@@ -7,3 +7,5 @@ celery = Celery(
     broker=f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}",
     include=["app.tasks.tasks"]
 )
+
+#celery beat  (запускается в отдельном процессе) / папка 

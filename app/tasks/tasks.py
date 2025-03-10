@@ -2,12 +2,11 @@ from pydantic import EmailStr
 from app.tasks.celery_app import celery
 from PIL import Image
 from pathlib import Path
-
 from app.config import settings
-
 import smtplib 
-
+from time import sleep
 from app.tasks.email_template import create_booking_confirmation_template
+
 
 @celery.task
 def process_pic(path: str,):

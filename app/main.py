@@ -1,3 +1,4 @@
+import asyncio
 from fastapi import FastAPI, Query
 from fastapi.staticfiles import StaticFiles
 from typing import Annotated, Optional
@@ -26,16 +27,25 @@ app = FastAPI()
 
 # import logging       
 
+async def get_data():
+    data = await asyncio.sleep(3) # имитация данных необходимых для старта приложения 
+    
+async def get_cache():
+    while True:
+        await get_data()
+        await asyncio.sleep(60*5)  # имитация кода, наполняющего справочные данные или набирание кэша, бесконечная функция 
 
-
-
+# при запуске 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     redis = aioredis.from_url(f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}") 
     FastAPICache.init(RedisBackend(redis), prefix="cache") #prefix="fastapi-cache" изначально
+    # await get_data()
+    # asyncio.create_task(get_cache()) # бесконечная задача
     yield
+# при выключении (на данный моент этот кусок кода еще не написан)
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(lifespan=lifespan)  # lifespan также нужно будет передатьь в VersionedFastAPI
 
 '''Ниже закомментирован более новый способ  '''
 

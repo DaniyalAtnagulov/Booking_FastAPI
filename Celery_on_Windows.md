@@ -6,7 +6,6 @@
 
 celery -A app.tasks.celery_app:celery worker --loglevel=INFO --pool=solo
 
-
 Если хотите что-то сделать с данными в базе данных, то используйте обёртку loop.run_until_complete(my_async_function). В этом курсе запросы в бд асинхронные. В селери нет поддержки асинхронных запросов. Это похоже на хак, но иначе ни как 
 
 import asyncio
@@ -17,10 +16,12 @@ def update_ip_user(ip):
     # UserOnlineDAO.find_all() - асинхронная функция
     items = loop.run_until_complete(UserOnlineDAO.find_all())
 
- 
 
 Если не хотите связываться с селери из-за отсутствия поддержки асинхронных функций, то можете использовать background_tasks. Там есть поддержка асинхронных функций. Разумеется, синхронные функции там тоже прекрасно работают )
 
+# flower 
+
+celery -A app.tasks.celery_app:celery flower
 
 # Отдельная тема:
 если вдруг не хочется гонять почту на реальные сервера или нет интернета, можно делать так.

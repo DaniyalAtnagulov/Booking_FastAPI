@@ -12,6 +12,7 @@ from app.hotels.dao import HotelDAO
 from app.tasks.tasks import send_booking_confirmation_email
 from app.users.dependencies import get_current_user
 from app.users.model import Users
+from fastapi import BackgroundTasks
 
 router = APIRouter(
     prefix="/bookings",
@@ -28,13 +29,17 @@ async def get_bookings(user:Users=Depends(get_current_user)) -> list[SBooking]:
 async def add_bookings(
     room_id: int, date_from: date, date_to: date,
     user: Users=Depends(get_current_user),
+    #background_tasks: BackgroundTasks
 ):
     booking = await BookingDAO.add(user.id, room_id, date_from, date_to)
 
     if not booking:
         raise RoomCannotBeBooked
     booking = TypeAdapter(SBooking).validate_python(booking).model_dump()     #Возможно стоит использовать иную схему SBooking
+    # вариант через celery
     send_booking_confirmation_email.delay(booking, user.email)
+    # вариант через встроенный background tasks(в tasks.py не забыть закомментировать @celery.task)
+    #backgroundtasks.add_task(send_booking_confirmation_email, booking, user.email) 
     return booking
     
 @router.delete("/{booking_id}") # Удаление
