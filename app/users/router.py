@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Response
 from app.exceptions import IncorrectEmailOrPasswordException, UserAlreadyExistsException
 from app.users.auth import authenticate_user, get_password_hash
 from app.users.dao import UsersDAO
-from app.users.auth import create_accsess_token
+from app.users.auth import create_access_token
 from app.users.dependencies import get_current_user
 from app.users.model import Users
 
@@ -27,7 +27,7 @@ async def login_user(response: Response, user_data:SUserAuth):
     user = await authenticate_user(user_data.email, user_data.password)
     if not user:
         raise IncorrectEmailOrPasswordException
-    access_token = create_accsess_token({'sub': str(user.id)}) #необходимо всгегда приводить значение ключа у jwt токена к строке
+    access_token = create_access_token({'sub': str(user.id)}) #необходимо всгегда приводить значение ключа у jwt токена к строке
     response.set_cookie("booking_access_token", access_token, httponly=True)
     return access_token
 

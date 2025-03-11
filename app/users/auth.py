@@ -14,7 +14,7 @@ def get_password_hash(password:str) -> str:
 def verify_password(plain_password, hashed_password) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
-def create_accsess_token(data: dict) -> str: #функция принимает словарь, а возвращает jwt, котор является строкой
+def create_access_token(data: dict) -> str: #функция принимает словарь, а возвращает jwt, котор является строкой
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(minutes=30) # тут только токен доступа, рефреш-токен не реализован, посему пользолвателя выкидывает через 30 мин
     to_encode.update({"exp":expire})
