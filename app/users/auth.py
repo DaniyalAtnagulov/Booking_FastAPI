@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from passlib.context import CryptContext
 from pydantic import EmailStr
 from jose import jwt
@@ -16,7 +16,7 @@ def verify_password(plain_password, hashed_password) -> bool:
 
 def create_access_token(data: dict) -> str: #функция принимает словарь, а возвращает jwt, котор является строкой
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=30) # тут только токен доступа, рефреш-токен не реализован, посему пользолвателя выкидывает через 30 мин
+    expire = datetime.now(UTC) + timedelta(minutes=30) # тут только токен доступа, рефреш-токен не реализован, посему пользолвателя выкидывает через 30 мин
     to_encode.update({"exp":expire})
     encoded_jwt = jwt.encode(
         to_encode, settings.SECRET_KEY, settings.ALGORITHM      #aslaasdawd - секретный ключ в виде рандомной строки в дальнейшем его сгенерирую специальным скриптом, а пока просто от руки задал
