@@ -22,3 +22,16 @@ class Base(DeclarativeBase):  # Класс Base аккумулирует дан�
     pass
 
 
+# Оптимизация Можно сделать метод, который будет принимать параметры и избежать дублирования кода:
+
+
+# def _build_db_url(self, user, password, host, port, name):
+#     return f"postgresql+asyncpg://{user}:{password}@{host}:{port}/{name}"
+
+# @property
+# def DATABASE_URL(self):
+#     return self._build_db_url(self.DB_USER, self.DB_PASS, self.DB_HOST, self.DB_PORT, self.DB_NAME)
+
+# @property
+# def DATABASE_TEST_URL(self):
+#     return self._build_db_url(self.TEST_DB_USER, self.TEST_DB_PASS, self.TEST_DB_HOST, self.TEST_DB_PORT, self.TEST_DB_NAME)

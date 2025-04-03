@@ -72,7 +72,26 @@ def event_loop():
 async def ac():
     async with AsyncClient(transport=ASGITransport(app=fastapi_app), base_url="http://test") as ac:
         yield ac
+ 
+"""В новых версиях httpx.AsyncClient убрали параметр app. Теперь нужно передавать transport=ASGITransport(app=fastapi_app)."""
+ 
+@pytest.fixture(scope="session")
+async def authenticated_ac():
+    async with AsyncClient(transport=ASGITransport(app=fastapi_app), base_url="http://test") as ac:
+        # Отправляем запрос на аутентификацию
+        response = await ac.post("/auth/login", json={
+            "email": "test@test.com",
+            "password": "test"
+        })
+
+        # Отладка: если авторизация не удалась, покажем ответ сервера
+        assert response.status_code == 200, f"Auth failed! Status: {response.status_code}, Response: {response.text}"
         
+        # Проверяем, что токен есть в cookies
+        assert "booking_access_token" in ac.cookies, f"Auth token missing! Cookies: {ac.cookies}"
+
+        yield ac  # Передаем клиент дальше в тесты
+
 @pytest.fixture(scope="function")
 async def session():
     async with async_session_maker() as session:
