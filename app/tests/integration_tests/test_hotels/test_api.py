@@ -1,5 +1,6 @@
 import pytest
 
+
 @pytest.mark.parametrize(
     "date_from, date_to, expected_status, expected_detail",
     [

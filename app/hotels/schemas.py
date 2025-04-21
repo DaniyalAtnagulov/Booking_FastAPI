@@ -2,6 +2,7 @@ from datetime import date
 
 from pydantic import BaseModel, ConfigDict
 
+
 class SHotel(BaseModel):
     id: int
     name: str

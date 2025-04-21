@@ -2,6 +2,7 @@ from datetime import date
 
 from pydantic import BaseModel, ConfigDict
 
+
 class SRoom(BaseModel):
     id: int
     hotel_id: int

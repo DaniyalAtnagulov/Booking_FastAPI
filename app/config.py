@@ -1,6 +1,7 @@
 from typing import Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
 # В версии Pydantic 2.0 модуль BaseSettings 
 # был вынесен в отдельную библиотеку pydantic-settings. 
 # Необходимо установить ее для корректной работы через pip install pydantic-settings

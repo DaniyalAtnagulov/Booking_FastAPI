@@ -1,6 +1,7 @@
+from sqlalchemy import RowMapping, insert, select
+
 from app.database import async_session_maker
 
-from sqlalchemy import RowMapping, insert, select
 
 class BaseDAO:
     model = None

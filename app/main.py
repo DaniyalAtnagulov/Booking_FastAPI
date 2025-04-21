@@ -1,32 +1,31 @@
 import asyncio
-from fastapi import FastAPI, Query
-from fastapi.staticfiles import StaticFiles
-from typing import Annotated, Optional
-from datetime import date
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from app.admin.views import BookingsAdmin, UsersAdmin, RoomsAdmin, HotelsAdmin
-from app.database import engine
-from app.users.model import Users
-from app.bookings.router import router as router_bookings
-from app.config import settings
-from app.users.router import router as router_users #,router_auth доработка функционала 1.8
-from app.hotels.router import router as router_hotels        
-from app.pages.router import router as router_pages
-
-from app.images.router import router as router_images
-
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from datetime import date
+from typing import Annotated, Optional
 
+from fastapi import FastAPI, Query
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from fastapi_cache.decorator import cache
-
+from pydantic import BaseModel
 from redis import asyncio as aioredis
-
 from sqladmin import Admin, ModelView
+
 from app.admin.auth import authentication_backend
+from app.admin.views import BookingsAdmin, HotelsAdmin, RoomsAdmin, UsersAdmin
+from app.bookings.router import router as router_bookings
+from app.config import settings
+from app.database import engine
+from app.hotels.router import router as router_hotels
+from app.images.router import router as router_images
+from app.pages.router import router as router_pages
+from app.users.model import Users
+from app.users.router import (
+    router as router_users,  # ,router_auth доработка функционала 1.8
+)
 
 app = FastAPI()
 

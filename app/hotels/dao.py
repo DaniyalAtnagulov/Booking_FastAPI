@@ -1,12 +1,11 @@
     
 from datetime import date
 
-from sqlalchemy import func, select, and_
+from sqlalchemy import and_, func, select
 from sqlalchemy.orm import aliased
 
-from app.bookings.model import Bookings, Bookings
-   
-from app.database import async_session_maker  
+from app.bookings.model import Bookings
+from app.database import async_session_maker
 from app.hotels.model import Hotels
 from app.hotels.rooms.model import Rooms
 

@@ -2,12 +2,13 @@ from datetime import date
 from typing import TYPE_CHECKING
 
 from sqlalchemy import Computed, Date, ForeignKey
-from app.database import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from app.database import Base
+
 if TYPE_CHECKING:
-    from app.users.model import Users
     from app.hotels.rooms.model import Rooms
+    from app.users.model import Users
 
 class Bookings(Base):
     __tablename__ = 'bookings'

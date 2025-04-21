@@ -1,6 +1,7 @@
 from typing import Any, Dict, Optional
-from typing_extensions import Annotated, Doc
+
 from fastapi import HTTPException, status
+from typing_extensions import Annotated, Doc
 
 
 class BookingException(HTTPException):

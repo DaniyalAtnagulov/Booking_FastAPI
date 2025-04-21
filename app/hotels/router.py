@@ -1,10 +1,10 @@
 import asyncio
+from datetime import date, datetime
 
+from fastapi import APIRouter, HTTPException, Query
 from fastapi_cache.decorator import cache
 
-from fastapi import APIRouter, Query, HTTPException
-from datetime import date, datetime
-from app.hotels.dao import HotelDAO 
+from app.hotels.dao import HotelDAO
 from app.hotels.schemas import SHotelInfo
 
 router = APIRouter(prefix="/hotels", tags=["Отели"])

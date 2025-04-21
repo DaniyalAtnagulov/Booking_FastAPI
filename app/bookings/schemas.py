@@ -1,7 +1,9 @@
 from datetime import date
 from typing import Optional
+
 #чтобы не прописывать заново атрибуты класса SBooking, беря их из Bokkings можно использовать SQLModel
 from pydantic import BaseModel, ConfigDict
+
 
 class SBooking(BaseModel):
     id: int             

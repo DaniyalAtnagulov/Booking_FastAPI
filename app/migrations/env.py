@@ -1,21 +1,25 @@
+import sys  # то, что изменил(добавил) в изначальном файл
 from logging.config import fileConfig
-import sys                                                      # то, что изменил(добавил) в изначальном файл
-from os.path import abspath, dirname                             # то, что изменил(добавил) в изначальном файл
-
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
- 
+from os.path import abspath, dirname  # то, что изменил(добавил) в изначальном файл
 
 from alembic import context
+from sqlalchemy import engine_from_config, pool
 
 sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))    # то, что изменил(добавил) Пошаманил с директориями, чтобы корректно работали абсолютные импорты(from app.database import Base, DATABASE_URL и from app.hotels.model import Hotels)
 
-from app.database import Base              # то, что изменил(добавил) в изначальном файл Абсолютный импорт
-from app.config import settings          # то, что изменил(добавил) в изначальном файл Абсолютный импорт
-from app.hotels.model import Hotels             # то, что изменил(добавил) в изначальном файл Абсолютный импорт модели
-from app.hotels.rooms.model import Rooms # то, что изменил(добавил) в изначальном файл Абсолютный импорт
-from app.bookings.model import Bookings   # то, что изменил(добавил) в изначальном файл Абсолютный импорт
-from app.users.model import Users # то, что изменил(добавил) в изначальном файл Абсолютный импорт
+from app.bookings.model import (
+    Bookings,  ) # noqa
+from app.config import (
+    settings,  ) # noqa
+from app.database import (
+    Base,  ) # noqa
+from app.hotels.model import (
+    Hotels,  
+) # noqa
+from app.hotels.rooms.model import (
+    Rooms,  ) # noqa
+from app.users.model import (
+    Users,  ) # noqa
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

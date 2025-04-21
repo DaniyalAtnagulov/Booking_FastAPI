@@ -1,7 +1,9 @@
 from typing import TYPE_CHECKING, Optional
+
 from sqlalchemy import JSON, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from app.database import Base
-from sqlalchemy.orm import mapped_column, Mapped, relationship
 
 if TYPE_CHECKING:
     from app.hotels.rooms.model import Rooms

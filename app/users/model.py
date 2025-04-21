@@ -1,8 +1,8 @@
-from app.database import Base
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy.orm import relationship
 from typing import TYPE_CHECKING
 
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from app.database import Base
 
 if TYPE_CHECKING:
     from app.bookings.model import Bookings

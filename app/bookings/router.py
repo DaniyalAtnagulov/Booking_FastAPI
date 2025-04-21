@@ -1,18 +1,19 @@
 from datetime import date
 from typing import Union
-from fastapi import APIRouter, Depends, Request
+
+from fastapi import APIRouter, BackgroundTasks, Depends, Request
 from pydantic import TypeAdapter, parse_obj_as
 from sqlalchemy import select
+
 from app.bookings.dao import BookingDAO
-from app.database import async_session_maker
 from app.bookings.model import Bookings
 from app.bookings.schemas import SBooking, SBookingWithRoomInfo
+from app.database import async_session_maker
 from app.exceptions import BookingNotExist, RoomCannotBeBooked
 from app.hotels.dao import HotelDAO
 from app.tasks.tasks import send_booking_confirmation_email
 from app.users.dependencies import get_current_user
 from app.users.model import Users
-from fastapi import BackgroundTasks
 
 router = APIRouter(
     prefix="/bookings",

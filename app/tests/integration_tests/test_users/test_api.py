@@ -1,6 +1,6 @@
+import pytest
 from httpx import AsyncClient
 
-import pytest 
 
 @pytest.mark.parametrize("room_id,date_from,date_to,booked_rooms,status_code", *[
     [(4, "2030-05-01", "2030-05-15", i, 201) for i in range(3, 11)] +

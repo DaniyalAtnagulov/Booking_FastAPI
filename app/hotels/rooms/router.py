@@ -1,7 +1,9 @@
 from datetime import date
+
 from app.hotels.dao import HotelDAO
 from app.hotels.rooms.schemas import SAvaibleRoom
 from app.hotels.router import router
+
 
 @router.get("/{hotel_id}/rooms")
 async def get_rooms(
