@@ -9,6 +9,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings): #принимает все параметры 
     
     MODE: Literal["DEV",  "TEST", "PROD"] #Literal  проверяет что значание являеся одним из вариатов в скобках
+    LOG_LEVEL: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
     
     DB_HOST: str
     DB_PORT: int

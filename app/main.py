@@ -2,9 +2,10 @@ import asyncio
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from datetime import date
+import time
 from typing import Annotated, Optional
 
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi_cache import FastAPICache
@@ -13,7 +14,9 @@ from fastapi_cache.decorator import cache
 from pydantic import BaseModel
 from redis import asyncio as aioredis
 from sqladmin import Admin, ModelView
+from fastapi_versioning import VersionedFastAPI
 
+from app import logger
 from app.admin.auth import authentication_backend
 from app.admin.views import BookingsAdmin, HotelsAdmin, RoomsAdmin, UsersAdmin
 from app.bookings.router import router as router_bookings
@@ -65,7 +68,7 @@ app = FastAPI(lifespan=lifespan)  # lifespan также нужно будет п
 #app = FastAPI(lifespan=lifespan)
 
 
-app.mount("/static", StaticFiles(directory="app/static"), "static")
+
 
 #app.include_router(router_auth)                          доработка функционала
 app.include_router(router_users)
@@ -96,18 +99,6 @@ app.add_middleware(
 )
 
 
-admin = Admin(
-    app=app,
-    engine=engine,
-    authentication_backend=authentication_backend)  
-
-
-    
-admin.add_view(UsersAdmin)
-admin.add_view(BookingsAdmin)
-admin.add_view(RoomsAdmin)
-admin.add_view(HotelsAdmin)
-
 
 
 # class SHotel(BaseModel):
@@ -136,20 +127,41 @@ def get_hotels(
 
 
 
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = time.time() - start_time
+
+    logger.info(
+        "Request handling time",
+        extra={"process_time": round(process_time, 4)}
+    )
+
+    return response
+
+app = VersionedFastAPI(app,
+    version_format='{major}',
+    prefix_format='/v{major}',
+#     description='Greet users with a nice message',
+#     middleware=[
+#         Middleware(SessionMiddleware, secret_key='mysecretkey')
+#     ]
+ )
+
+app.mount("/static", StaticFiles(directory="app/static"), "static")  # static-файлы лучше монтировать после VersionedFastAPI, т.е. конкретно к эиому приложению
+
+admin = Admin(    ## админки также могут использовать static-файлы, но под капотом                                           
+    app=app,
+    engine=engine,
+    authentication_backend=authentication_backend)  
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+    
+admin.add_view(UsersAdmin)
+admin.add_view(BookingsAdmin)
+admin.add_view(RoomsAdmin)
+admin.add_view(HotelsAdmin)
 
 
 

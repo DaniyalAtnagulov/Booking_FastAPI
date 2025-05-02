@@ -4,6 +4,7 @@ from typing import Union
 from fastapi import APIRouter, BackgroundTasks, Depends, Request
 from pydantic import TypeAdapter, parse_obj_as
 from sqlalchemy import select
+from fastapi_versioning import version
 
 from app.bookings.dao import BookingDAO
 from app.bookings.model import Bookings
@@ -21,12 +22,14 @@ router = APIRouter(
 )
 
 @router.get("")
+@version(1)
 async def get_bookings(user:Users=Depends(get_current_user)) -> list[SBooking]:
     return await BookingDAO.find_all(user_id=user.id)
     #print(user, type(user), user.email)
 
 
-@router.post("")             #стоит переделать, как в 2.1              
+@router.post("")             #стоит переделать, как в 2.1 
+@version(1)             
 async def add_bookings(
     room_id: int, date_from: date, date_to: date,
     user: Users=Depends(get_current_user),
@@ -43,7 +46,8 @@ async def add_bookings(
     #backgroundtasks.add_task(send_booking_confirmation_email, booking, user.email) 
     return booking
     
-@router.delete("/{booking_id}") # Удаление
+@router.delete("/{booking_id}") 
+@version(1)
 async def cancel_booking(
     booking_id: int,
     user: Users = Depends(get_current_user),  
@@ -57,6 +61,7 @@ async def cancel_booking(
 
 
 @router.get("")
+@version(1)
 async def get_by_user_id(user_id: int)-> list[SBookingWithRoomInfo]:
     return await BookingDAO.find_by_user
    
