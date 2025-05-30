@@ -15,6 +15,7 @@ from pydantic import BaseModel
 from redis import asyncio as aioredis
 from sqladmin import Admin, ModelView
 from fastapi_versioning import VersionedFastAPI
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from app import logger
 from app.admin.auth import authentication_backend
@@ -25,6 +26,7 @@ from app.database import engine
 from app.hotels.router import router as router_hotels
 from app.images.router import router as router_images
 from app.pages.router import router as router_pages
+from app.prometheus.router import router as router_prometheus
 from app.users.model import Users
 from app.users.router import (
     router as router_users,  # ,router_auth доработка функционала 1.8
@@ -76,7 +78,7 @@ app.include_router(router_hotels)
 app.include_router(router_bookings)
 
 app.include_router(router_pages)
-
+app.include_router(router_prometheus)
 app.include_router(router_images)
 
 
@@ -150,6 +152,14 @@ app = VersionedFastAPI(app,
  )
 
 app.mount("/static", StaticFiles(directory="app/static"), "static")  # static-файлы лучше монтировать после VersionedFastAPI, т.е. конкретно к эиому приложению
+
+
+instrumentator = Instrumentator(
+    should_group_status_codes=False,
+    excluded_handlers=[".*admin.*", "/metrics"],
+)
+instrumentator.instrument(app).expose(app)
+
 
 admin = Admin(    ## админки также могут использовать static-файлы, но под капотом                                           
     app=app,
