@@ -15,7 +15,7 @@ from pydantic import BaseModel
 from redis import asyncio as aioredis
 from sqladmin import Admin, ModelView
 from fastapi_versioning import VersionedFastAPI
-from prometheus_fastapi_instrumentator import Instrumentator
+#from prometheus_fastapi_instrumentator import Instrumentator
 
 from app import logger
 from app.admin.auth import authentication_backend
@@ -154,11 +154,11 @@ app = VersionedFastAPI(app,
 app.mount("/static", StaticFiles(directory="app/static"), "static")  # static-файлы лучше монтировать после VersionedFastAPI, т.е. конкретно к эиому приложению
 
 
-instrumentator = Instrumentator(
-    should_group_status_codes=False,
-    excluded_handlers=[".*admin.*", "/metrics"],
-)
-instrumentator.instrument(app).expose(app)
+# instrumentator = Instrumentator(
+#     should_group_status_codes=False,
+#     excluded_handlers=[".*admin.*", "/metrics"],
+# )
+# instrumentator.instrument(app).expose(app)
 
 
 admin = Admin(    ## админки также могут использовать static-файлы, но под капотом                                           
