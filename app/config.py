@@ -58,3 +58,5 @@ class Settings(BaseSettings):
 
 # Создание экземпляра настроек
 settings = Settings()
+
+#print("DATABASE_URL:", settings.DATABASE_URL)
