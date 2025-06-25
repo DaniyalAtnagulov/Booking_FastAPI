@@ -3,18 +3,18 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    # Основной режим работы
-    MODE: Literal["DEV", "TEST", "PROD"]
+    # Режим работы
+    MODE: Literal["DEV", "TEST", "PROD"] = "DEV"
     LOG_LEVEL: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
 
-    # Настройки основной БД
+    # Основная БД
     DB_HOST: str
     DB_PORT: int
     DB_USER: str
     DB_PASS: str
     DB_NAME: str
 
-    # Настройки тестовой БД
+    # Тестовая БД
     TEST_DB_HOST: str
     TEST_DB_PORT: int
     TEST_DB_USER: str
@@ -37,17 +37,9 @@ class Settings(BaseSettings):
 
     @property
     def DATABASE_URL(self) -> str:
-        """Асинхронный URL для приложения и Alembic (при миграции онлайн)"""
+        """Асинхронный URL — используется приложением и Alembic"""
         return (
             f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}"
-            f"@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
-        )
-
-    @property
-    def DATABASE_SYNC_URL(self) -> str:
-        """Синхронный URL для Alembic (autogenerate в env.py)"""
-        return (
-            f"postgresql+psycopg2://{self.DB_USER}:{self.DB_PASS}"
             f"@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
         )
 
@@ -63,3 +55,4 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
