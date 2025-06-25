@@ -2,6 +2,10 @@ from sqlalchemy import NullPool
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
+
+from sqlalchemy import text
+import asyncio
+
 from app.config import settings
 
 #from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker​​​​​​
@@ -37,3 +41,4 @@ class Base(DeclarativeBase):  # Класс Base аккумулирует дан�
 # @property
 # def DATABASE_TEST_URL(self):
 #     return self._build_db_url(self.TEST_DB_USER, self.TEST_DB_PASS, self.TEST_DB_HOST, self.TEST_DB_PORT, self.TEST_DB_NAME)
+
