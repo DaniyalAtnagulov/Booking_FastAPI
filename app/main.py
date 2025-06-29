@@ -56,7 +56,6 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
 
 app = FastAPI(lifespan=lifespan)  # lifespan также нужно будет передатьь в VersionedFastAPI
 
-'''Ниже закомментирован более новый способ  '''
 
 # logger = logging.getLogger(__name__)
 # logging.basicConfig(level=logging.INFO)
